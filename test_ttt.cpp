@@ -9,7 +9,10 @@ using namespace std;
 
 class Player
 {
+public: //TESTING
+
     char m_letter;
+    bool m_isComputer = false; //TESTING
 
 public:
     Player(){} //DEFAULT
@@ -34,6 +37,7 @@ public:
 class Computer : public Player
 {
     char m_letter;
+    bool m_isComputer = true; //TESTING
 
 public:
     Computer(){} //DEFAULT
@@ -56,75 +60,91 @@ public:
 
 class Game
 {
+public: //TESTING
     Player m_players[3];
-    char m_playComputer;
-    Player m_player1;
-    Player m_player2;
-    Computer m_computer;
+    Player* m_player_ptrs[3];
 
-    public:
-        Game(char playComputer)
-        : m_playComputer(playComputer)
+    //What we want to avoid needing
+    // char m_playComputer;
+    // Player m_player1;
+    // Player m_player2;
+    // Computer m_computer;
+
+public:
+    Game(char playComputer)
+    {
+        m_players[1] = Player('X');
+        
+        if (playComputer == 'n')
         {
-            m_players[1] = Player('X');
+            m_players[2] = Player('O');
+        }
+        else{
+            //Set a pointer to a Player
+            Player *player_ptr;
+
+            //Create a Computer
+            Computer computer = Computer('C');
+
+            //Set value of player pointer as address of Computer object
+            player_ptr = &computer;
+
+            // Player *player_ptr = new Computer('C');
             
-            if (m_playComputer == 'n')
-            {
-                m_players[2] = Computer('O');
-            }
-            else{
-                m_computer = Computer('C');
-            }
-        }
+            //Print by pointer
+            cout << "From Game(): " << player_ptr->getLetter() << " is computer: " 
+                    << player_ptr->isComputer() << endl;
 
-        Player getPlayer(int number)
-        {
-            if (m_playComputer != 'n' && number != 1)
-            {
-                returnComputer();
-            }
-            else if (number == 1)
-            {
-                returnPlayer(1);
-            }
-            else if (number == 2)
-            {
-                returnPlayer(2);
-            }
-            else
-            {
-                throw("getPlayer() in Game given bad player number.");
-            }
-            
-            
-        }
+            //Player 2 in pointer array is set as pointer to Computer object
+            m_player_ptrs[3] = player_ptr;
 
-        Computer returnComputer()
-        {
-            return m_computer;
+            //Print by pointer from array
+            cout << "From Game(): " << m_player_ptrs[3]->getLetter() << " is computer: " 
+                    << m_player_ptrs[3]->isComputer() << endl;
         }
+    }
 
-        Player returnPlayer(int number)
-        {
-            return m_players[number];
-        }
+    Player getPlayer(int number)
+    {
+        return m_players[number];            
+    }
+
+    Player* getPlayerByPointer(int number)
+    {
+        return m_player_ptrs[number];
+    }
+
+    //What we want to avoid needing
+    // Computer returnComputer()
+    // {
+    //     return m_computer;
+    // }
+
+    //What we want to avoid needing
+    // Player returnPlayer(int number)
+    // {
+    //     return m_players[number];
+    // }
 
 };
 
-
-
-
-
-
 int main()
 {
-    Game game1 = Game('n');
+    Game game1 = Game('y');
 
     cout << game1.getPlayer(1).getLetter() << " is computer: " << game1.getPlayer(1).isComputer() << endl;
-    cout << game1.getPlayer(2).getLetter() << " is computer: " << game1.getPlayer(2).isComputer() << endl;
-
     
+    // // Does not work!
+    // cout << game1.m_player_ptrs[3]->getLetter() << " is computer: " 
+    //      << game1.m_player_ptrs[3]->isComputer() << endl;
 
+    // // Does not work!
+    // cout << game1.getPlayerByPointer(2)->getLetter() << " is computer: " 
+    //      << game1.getPlayerByPointer(2)->isComputer() << endl;
+
+    // // Does not work!
+    // cout << game1.m_player_ptrs[3]->m_letter << " is Computer: " << game1.m_player_ptrs[3]->m_isComputer 
+    //      << endl;
 
     return 0;
 }
